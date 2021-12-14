@@ -6,59 +6,80 @@ import (
 	"math"
 	"os"
 	"strconv"
-	"strings"
 )
 
-func GetData() [][]int {
-	f, _ := os.Open("input.txt")
+func getData(filepath string) [][]int {
+	f, _ := os.Open(filepath)
+
 	scanner := bufio.NewScanner(f)
-	nums := [][]int{}
+
+	data := [][]int{}
 	for scanner.Scan() {
 		line := scanner.Text()
-		chars := strings.Split(line, "")
-		tmp := []int{}
-		for _, c := range chars {
-			d, _ := strconv.Atoi(c)
-			tmp = append(tmp, d)
+		num := []int{}
+		for _, c := range line {
+			d, _ := strconv.Atoi(string(c))
+			num = append(num, d)
 		}
-		nums = append(nums, tmp)
+		data = append(data, num)
 	}
-	return nums
+	return data
 }
 
-func GetDec(b []int) int {
+func findMostCommon(data [][]int, pos int) int {
+	var zeroes, ones int
+	for _, n := range data {
+		if n[pos] == 1 {
+			ones++
+		} else {
+			zeroes++
+		}
+	}
+	if ones >= zeroes {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func DtoB(n []int) int {
 	res := 0
-	for i := 0; i < len(b); i++ {
-		res += b[i] * int(math.Pow(2, float64(len(b)-i-1)))
+	for idx, d := range n {
+		res += d * int(math.Pow(2, float64(len(n)-idx-1)))
 	}
 	return res
 }
 
-func SolveI() {
-	nums := GetData()
-	gammaRate := make([]int, len(nums[0]))
-	epsilonRate := make([]int, len(nums[0]))
+func main() {
+	data_oxy := getData("input.txt")
+	data_co2 := getData("input.txt")
 
-	for i := range nums[0] {
-		tmp := 0
-		for _, n := range nums {
-			if n[i] == 1 {
-				tmp += 1
-			} else {
-				tmp -= 1
+	pos := 0
+	for len(data_oxy) != 1 {
+		tmp := [][]int{}
+		mcv := findMostCommon(data_oxy, pos)
+		for _, el := range data_oxy {
+			if el[pos] == mcv {
+				tmp = append(tmp, el)
 			}
 		}
-		if tmp >= 0 {
-			gammaRate[i] = 1
-			epsilonRate[i] = 0
-		} else {
-			gammaRate[i] = 0
-			epsilonRate[i] = 1
-		}
+		data_oxy = tmp
+		pos++
 	}
-	fmt.Println(GetDec(gammaRate) * GetDec(epsilonRate))
-}
 
-func main() {
-	SolveI()
+	pos = 0
+	for len(data_co2) != 1 {
+		tmp := [][]int{}
+		mcv := findMostCommon(data_co2, pos)
+		for _, el := range data_co2 {
+			if el[pos] != mcv {
+				tmp = append(tmp, el)
+			}
+		}
+		data_co2 = tmp
+		pos++
+	}
+
+	fmt.Println(data_oxy, data_co2, DtoB(data_oxy[0]), DtoB(data_co2[0]))
+	fmt.Println(DtoB(data_oxy[0]) * DtoB(data_co2[0]))
 }
