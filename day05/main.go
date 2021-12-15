@@ -88,7 +88,9 @@ func SolveII() {
 		p2 := Point{x: x2, y: y2}
 
 		var start, end int
-		if p1.x == p2.x {
+		xDiff := math.Abs(float64(p1.x - p2.x))
+		yDiff := math.Abs(float64(p1.y - p2.y))
+		if xDiff == 0 {
 			if p1.y >= p2.y {
 				start = p2.y
 				end = p1.y
@@ -99,7 +101,7 @@ func SolveII() {
 			for i := start; i <= end; i++ {
 				covered[Point{x: p1.x, y: i}]++
 			}
-		} else if p1.y == p2.y {
+		} else if yDiff == 0 {
 			if p1.x >= p2.x {
 				start = p2.x
 				end = p1.x
@@ -110,24 +112,24 @@ func SolveII() {
 			for i := start; i <= end; i++ {
 				covered[Point{x: i, y: p1.y}]++
 			}
-		} else if math.Abs(float64(p1.x-p2.x)) == math.Abs(float64(p1.y-p2.y)) {
+		} else if xDiff == yDiff {
 			if p2.x > p1.x {
 				if p2.y < p1.y {
-					for i := 0; i <= int(math.Abs(float64(p1.x-p2.x))); i++ {
+					for i := 0; i <= int(xDiff); i++ {
 						covered[Point{x: p1.x + i, y: p1.y - i}]++
 					}
 				} else {
-					for i := 0; i <= int(math.Abs(float64(p1.x-p2.x))); i++ {
+					for i := 0; i <= int(xDiff); i++ {
 						covered[Point{x: p1.x + i, y: p1.y + i}]++
 					}
 				}
 			} else {
 				if p2.y < p1.y {
-					for i := 0; i <= int(math.Abs(float64(p1.x-p2.x))); i++ {
+					for i := 0; i <= int(xDiff); i++ {
 						covered[Point{x: p1.x - i, y: p1.y - i}]++
 					}
 				} else {
-					for i := 0; i <= int(math.Abs(float64(p1.x-p2.x))); i++ {
+					for i := 0; i <= int(xDiff); i++ {
 						covered[Point{x: p1.x - i, y: p1.y + i}]++
 					}
 				}
@@ -146,5 +148,5 @@ func SolveII() {
 }
 
 func main() {
-	SolveII()
+	SolveI()
 }
