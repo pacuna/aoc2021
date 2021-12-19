@@ -4,7 +4,11 @@ import collections
 
 M: List[List[int]] = []
 for line in open('data.in'):
-    M.append([int(x) for x in line.strip()])
+    row: List[int] = []
+    line = line.strip()
+    for c in line:
+        row.append(int(c))
+    M.append(row)
 
 def is_low_point(M: List[List[int]], row: int, col: int) -> bool:
     directions: List[List[int]] = [[1, 0], [-1, 0], [0, 1], [0, -1]]
@@ -38,7 +42,7 @@ def bfs(M: List[List[int]], row: int, col: int) -> None:
     basin = []
     basin.append(M[row][col])
     while q:
-        R, C = q.popleft()
+        R, C = q.pop()
         directions: List[List[int]] = [[1, 0], [-1, 0], [0, 1], [0, -1]]
         for dr, dc in directions:
             r, c = R + dr, C + dc
