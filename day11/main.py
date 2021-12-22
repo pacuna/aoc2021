@@ -27,6 +27,14 @@ def print_grid(grid):
         print(" ".join([str(x) for x in grid[r]]))
 
 
+def all_flash(grid) -> bool:
+    for r in range(len(grid)):
+        for c in range(len(grid[0])):
+            if grid[r][c] != 0:
+                return False
+    return True
+
+
 def run_steps(num_steps: int) -> None:
     total_flashes = 0
     for i in range(num_steps):
@@ -44,8 +52,9 @@ def run_steps(num_steps: int) -> None:
         for row, col in flashed:
             M[row][col] = 0
         total_flashes += len(flashed)
-        print("total flashes: ", total_flashes)
+        if all_flash(M):
+            print("flashed at ", i+1)
 
 
 if __name__ == '__main__':
-    run_steps(100)
+    run_steps(300)
